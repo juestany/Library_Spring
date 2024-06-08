@@ -1,5 +1,6 @@
 package com.example.library.controller;
 
+import com.example.library.infrastructure.dtos.LoanDTO;
 import com.example.library.infrastructure.entity.BookEntity;
 import com.example.library.infrastructure.entity.LoanEntity;
 import com.example.library.service.LoanService;
@@ -29,8 +30,9 @@ public class LoanController {
      * @return List of LoanEntity objects.
      */
     @GetMapping
-    public List<LoanEntity> getAllLoans() {
-        return loanService.getAll();
+    public ResponseEntity<List<LoanDTO>> getAllLoans() {
+        List<LoanDTO> loans = loanService.getAll();
+        return ResponseEntity.ok(loans);
     }
 
     /**
@@ -39,24 +41,21 @@ public class LoanController {
      * @return The LoanEntity object with the specified ID.
      */
     @GetMapping("/{id}")
-    public LoanEntity getOne(@PathVariable long id) {
-        return loanService.getOne(id);
+    public ResponseEntity<LoanDTO> getOne(@PathVariable long id) {
+        LoanDTO loanDTO = loanService.getOne(id);
+        return ResponseEntity.ok(loanDTO);
     }
 
     /**
      * Create a new loan.
-     * @param loan The loan to create.
+     * @param loanDTO The loan to create.
      * @return ResponseEntity indicating success or failure of the operation.
      */
     @PostMapping
-    public ResponseEntity<LoanEntity> create(@RequestBody LoanEntity loan) {
-        loanService.create(loan);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<LoanDTO> createLoan(@RequestBody LoanDTO loanDTO) {
+        LoanDTO createdLoan = loanService.create(loanDTO);
+        return ResponseEntity.ok(createdLoan);
     }
-//    @ResponseStatus(code = HttpStatus.CREATED)
-//    public LoanEntity create(@RequestBody LoanEntity loan){
-//        return loanService.create(loan);
-//    }
 
     /**
      * Delete a loan by its ID.
@@ -64,7 +63,7 @@ public class LoanController {
      * @return ResponseEntity indicating success or failure of the operation.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable long id) {
+    public ResponseEntity<Void> deleteLoan(@PathVariable long id) {
         loanService.delete(id);
         return ResponseEntity.noContent().build();
     }
